@@ -4,9 +4,7 @@ This challenge reads shellcode from stdin and executes it. The problem is that t
 
 ## What syscalls can we use?
 
-
-
-To find out what syscalls we can use we can use the following command:
+To find out what syscalls we can use there is the following command:
 
 ```bash
 seccomp-tools dump ./onlyreadwrite
