@@ -4,9 +4,9 @@ It reads 3 bytes from stdin and executes them as shellcode.
 
 The idea is to run a multi-stage shellcode, where the first stage is a small shellcode that call the syscall `read` to read the second stage from stdin. The second stage is the actual shellcode that will be executed.
 
-## First stage (3 bytes)
+## First Stage (3 bytes)
 
-```
+```asm
 pop rdx
 syscall
 ```
@@ -16,7 +16,7 @@ syscall
 - RSI: already set to the buffer address
 - RDX: set using `pop rdx`. Why so? Because at that point the stack contains a large number that can be used as a buffer size
 
-## Second stage (25 bytes)
+## Second Stage (25 bytes)
 
 Main idea: `execve(RDI -> "/bin/sh", RSI = argv -> NULL, RDX = envp -> NULL)`
 
