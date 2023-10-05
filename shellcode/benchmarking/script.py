@@ -2,20 +2,6 @@ from pwn import *
 
 context.arch = 'amd64'
 
-if(len(sys.argv) > 1):
-	if(sys.argv[1] == '--debug'):
-		p = process("./benchmarking_service")
-		gdb.attach(p, """
-		# b *play+601
-		"""	)
-		input("wait...")
-	elif(sys.argv[1] == '--strace'):
-		p = process(["strace", "./benchmarking_service"])
-	elif(sys.argv[1] == '--remote'):
-		p = remote("bin.training.offdef.it", 5001)
-else:
-	p = process("./benchmarking_service")
-
 count = 0
 flag = ""
 exit = False
