@@ -47,3 +47,5 @@ read_execve_payload = [
 This stage fits the 0x1000 bytes we have set in the RDX register in the first stage. We overflow the buffer and overwrite the sRIP of the read() function. Basically the read() function in the main instead of returning to the main itself, it returns to the pop_rdi gadget. Then the chain begins, a read syscall is called to read the string '/bin/sh' in the bss section, then the execve syscall is called to execute the string '/bin/sh'.
 
 Note that we have two different syscall gadgets. This is because the xor_eax_eax_syscall gadget is used to set the RAX register to 0x0, while the last syscall gadget is a terminator syscall, meaning that it will never return.
+
+The complete exploit is in [script.py](script.py).

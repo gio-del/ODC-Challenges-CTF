@@ -6,9 +6,9 @@ Challenges are divided into categories, each one of them has its own folder. Eac
 
 ## Categories
 
-- [Shellcode](...)
-- [Reverse Engineering](...)
-- [Mitigation Bypass](...)
-- [ROP](...)
+- [Shellcode](./shellcode/)
+- [Reverse Engineering](./reversing/)
+- [Mitigation Bypass](./mitigations/)
+- [ROP](./rop/)
 
 ## Final CTF

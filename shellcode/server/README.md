@@ -53,3 +53,5 @@ void prog(int socket_fd) {
 ```
 
 get_name() is reading 4096 bytes in a buffer of 1008 bytes, so we have a buffer overflow. We overflow the buffer with the shellcode and modify the return address to point to it. We know the address of the shellcode because it is in the .bss section and the binary is not PIE.
+
+The complete exploit is in [script.py](script.py).

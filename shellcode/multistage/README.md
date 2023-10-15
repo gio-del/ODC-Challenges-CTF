@@ -39,3 +39,5 @@ syscall
 - RDX: set to 0 (NULL)
 
 Why 0x2a? Because the first stage is 20 bytes long and the second one is 22 bytes long. So the total is 42 = 0x2a.
+
+The complete exploit is in [script.py](script.py).

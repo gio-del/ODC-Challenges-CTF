@@ -66,3 +66,5 @@ syscall
 - RAX: it's set to 0x3b (the execve syscall number).
 - RSI: it's set to 0.
 - RDX: it's set to 0.
+
+The complete exploit is in [script.py](script.py).

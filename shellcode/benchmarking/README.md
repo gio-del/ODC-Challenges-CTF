@@ -60,3 +60,5 @@ As we an see in this snippet there are %d placeholders. In fact this shellcode i
 Based on the time required to execute this shellcode we get if the character we are trying is greater or less than the flag character. Then we can do a binary search to find the flag character.
 
 I used loops to simulate the `nanosleep` syscall.
+
+The complete exploit is in [script.py](script.py).

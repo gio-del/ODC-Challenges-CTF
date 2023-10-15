@@ -22,3 +22,5 @@ int main(int argc,char **argv) {
 ```
 
 The swi(3) is doing an int3 to trigger a SIGTRAP signal. This is used to prevent the program from being debugged. We can patch this out with a hex editor or gdb. Or we can just reverse engineer the catch_function and see what it does. This is what the `flag_cracker.c` program does. In fact, it is a very simple function: the input is xored with a key and the result is compared with another array of bytes. So we need just to xor the key array with the result bytes array to get the flag.
+
+The complete cracking program is in [flag_cracker.c](flag_cracker.c).

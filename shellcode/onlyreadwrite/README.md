@@ -90,3 +90,5 @@ syscall
 ```
 
 Basically it is opening the file, reading it on the stack and then writing it on stdout.
+
+The complete exploit is in [script.py](script.py).

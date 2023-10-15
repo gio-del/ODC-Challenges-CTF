@@ -39,3 +39,5 @@ Note: The first three `nop`s are there since the RIP after the first stage is se
 - RAX: set to 0x3b (syscall number for `execve`)
 - RSI: set to 0x0 (NULL)
 - RDX: set to 0x0 (NULL)
+
+The complete exploit is in [script.py](script.py).
