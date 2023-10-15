@@ -14,6 +14,6 @@ int main(int argc, char *argv[]) {
     }
 
     printf("Decoded Flag: %s\n", flag);
-    
+
     return 0;
 }
