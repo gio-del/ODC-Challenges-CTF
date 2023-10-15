@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 
 int main(int argc, char *argv[]) {
@@ -14,6 +13,6 @@ int main(int argc, char *argv[]) {
     flag[37] = '\0';
 
     printf("\nDecoded Flag: %s\n", flag);
-    
+
     return 0;
 }
