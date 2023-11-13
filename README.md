@@ -10,5 +10,6 @@ Challenges are divided into categories, each one of them has its own folder. Eac
 - [Reverse Engineering](./reversing/)
 - [Mitigation Bypass](./mitigations/)
 - [ROP](./rop/)
+- [Heap](./heap/)
 
 ## Final CTF
