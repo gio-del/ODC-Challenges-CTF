@@ -1,0 +1,6 @@
+- In get_string there is a malloc of a given size and then a single NULL byte overflow, interesting!
+- Each pkm has a list of move, each move containes a name string and a function pointer
+
+High Level Idea: use this NULL byte poisoning vulnerability to allocate two overlapping chunks, and then overwriting the function pointer to go to system for example.
+
+We also need a leak of libc?
