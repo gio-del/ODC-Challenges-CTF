@@ -11,5 +11,6 @@ Challenges are divided into categories, each one of them has its own folder. Eac
 - [Mitigation Bypass](./mitigations/)
 - [ROP](./rop/)
 - [Heap](./heap/)
+- [Symbolic](./symbolic/)
 
 ## Final CTF
