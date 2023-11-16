@@ -21,7 +21,7 @@ if simgr.found:
 	flag = found.solver.eval(input_flag)
 	flag = bytes.fromhex(hex(flag)[2:]).decode('utf-8')
 
-	print('flag:', flag, 'len: ')
+	print('flag:', flag)
 
 	p = remote("bin.training.offdef.it", 2021)
 
