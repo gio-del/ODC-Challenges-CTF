@@ -1,0 +1,14 @@
+checksec playground
+[*] '/home/zerocool/Desktop/Chall/heap/playground/playground'
+    Arch:     amd64-64-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      PIE enabled
+
+It's PIE but the binary leaks the main() address, also the heap is leaked.
+Actually with show we can leak all the address in memory
+
+- tcache 2 involved, no easy double free is possible
+- no arbitrary free
+- It is possible to write to freed chunks -> tcache poison attack
