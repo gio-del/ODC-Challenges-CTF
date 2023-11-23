@@ -11,14 +11,14 @@ def login(session, username, password):
     data = {'username': username, 'password': password}
     response = session.post(url, data=data)
     if('flag' in response.text):
-        print(response.text)
+        flag = response.text.split('flag{')[1].split('}')[0]
+        print('flag{' + flag + '}')
     return response.text
 
 def register(session, username, password):
     url = base_url + '/register.php'
     data = {'username': username, 'password': password}
     response = session.post(url, data=data)
-
     return response.text
 
 
@@ -40,8 +40,6 @@ while True:
 
     t1.start()
     t2.start()
-
-    print(u, p)
 
     t1.join()
     t2.join()
