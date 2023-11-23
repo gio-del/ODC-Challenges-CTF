@@ -26,8 +26,8 @@ def post_code(session, code):
     # code is sent with no json, just text
     response = session.post(run_url, data=code)
     if 'flag' in response.text:
-        print(response.text)
-    print(response.text)
+        flag = response.text.split('flag{')[1].split('}')[0]
+        print('flag{' + flag + '}')
     return response.text # this is the output of the code execution if the code is valid (hopefully we exploit this :D)
 
 u, p = random_user()
