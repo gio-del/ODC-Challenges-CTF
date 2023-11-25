@@ -7,4 +7,5 @@ Challenges (in rough order of subjective difficulty):
 - [easyrop](./easyrop/)
 - [emptyspaces](./emptyspaces/)
 - [ropasaurusrex](./ropasaurusrex/)
+- [byteflip](./byteflip)
 - [positiveleak](./positiveleak/)
