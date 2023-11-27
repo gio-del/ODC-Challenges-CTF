@@ -13,5 +13,6 @@ Challenges are divided into categories, each one of them has its own folder. Eac
 - [Heap](./heap/)
 - [Symbolic](./symbolic/)
 - [Race Condition](./race/)
+- [Serialization](./serialization/)
 
 ## Final CTF
