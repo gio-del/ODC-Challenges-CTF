@@ -10,9 +10,10 @@ Challenges are divided into categories, each one of them has its own folder. Eac
 - [Reverse Engineering](./reversing/)
 - [Mitigation Bypass](./mitigations/)
 - [ROP](./rop/)
-- [Heap](./heap/)
-- [Symbolic](./symbolic/)
+- [Heap Exploitation](./heap/)
+- [Symbolic Exeuction and Fuzzing](./symbolic/)
 - [Race Condition](./race/)
 - [Serialization](./serialization/)
+- [XSS](./xss/)
 
 ## Final CTF
