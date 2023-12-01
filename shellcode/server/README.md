@@ -54,4 +54,20 @@ void prog(int socket_fd) {
 
 get_name() is reading 4096 bytes in a buffer of 1008 bytes, so we have a buffer overflow. We overflow the buffer with the shellcode and modify the return address to point to it. We know the address of the shellcode because it is in the .bss section and the binary is not PIE.
 
+## Alternative solution
+
+One can also use the syscall `dup2` to redirect the socket file descriptor to stdout, and then use the shellcode from the previous challenges.
+
+```x86asm
+xor rax, rax
+mov rax, 0x21 /* dup2 */
+mov rsi, 0x0
+/* mov rdi, rdi <- the fd is already in rdi */
+syscall
+```
+
+Then do the same for stdin. And then just a normal execve will do the job.
+
+Note that I'm not overwriting the rdi register (that should contain the `newfd` argument) because the file descriptor is already in rdi.
+
 The complete exploit is in [script.py](script.py).
