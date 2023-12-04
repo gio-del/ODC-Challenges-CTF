@@ -62,8 +62,6 @@ nav:
     - 'csp': xss/csp/README.md
     - 'strict-csp': xss/strict-csp/README.md
 plugins:
-  - search:
-      indexing: 'full'
-      lang: 'en'
+  - search
 extra_css:
   - .//css/custom-styles.css
