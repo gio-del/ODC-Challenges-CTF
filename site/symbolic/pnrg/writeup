@@ -1,9 +1,0 @@
-seed: 4 byte
-
-generate an array from the seed of 625 64 bits element from the seed
-
-Use this array to generate rand Long
-
-Generate 1000 rand Long, and print the 1001-th rand Long
-
-Given this rand Long find the seed
