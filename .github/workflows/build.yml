@@ -1,0 +1,31 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build and Deploy
+        uses: peaceiris/actions-mkdocs-gh-pages@v3
+        with:
+          publish_branch: gh-pages
+          publish_dir: ./site
+          mkdocs_yml: mkdocs.yml
+          force_orphan: true
+          enable_ssh: true
+          allow_empty_commit: true
+          commit_message: ${{ github.event.head_commit.message }}
+          commit_user_name: ${{ github.event.head_commit.author.name }}
+          commit_user_email: ${{ github.event.head_commit.author.email }}
+          build_script: |
+            mkdocs build --verbose --clean --strict
+            cp -r ./site/* .
+            rm -rf ./site
+            git add .
+            git commit -m "Update from main branch"
+            git push origin gh-pages
