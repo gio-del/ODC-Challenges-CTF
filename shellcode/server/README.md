@@ -2,7 +2,7 @@
 
 This challenge is very similar to the [Only Read Write](../onlyreadwrite/README.md) challenge. The only difference is that the binary now is a server that listens on a port and forks a child process that reads in a buffer. Then we have to write not on stdout but on the socket file descriptor.
 
-```x86asm
+```c
     mov r12, rdi
     mov rax, 0x101010101010101
     push rax

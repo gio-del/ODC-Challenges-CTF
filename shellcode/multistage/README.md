@@ -6,7 +6,7 @@ The idea is to write a first stage that reads the second stage from stdin.
 
 ## First Stage
 
-```asm
+```c
 mov rsi, rax
 xor rax, rax
 mov rdi, rax
@@ -22,7 +22,7 @@ syscall
 
 ## Second Stage
 
-```asm
+```c
 ; 20*0x90 to align with the RIP
 mov rdi, rsi
 add rdi, 0x2a

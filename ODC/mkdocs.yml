@@ -1,0 +1,69 @@
+site_name: Cyberchallenge Writeups
+site_description: Writeups for various challenges grouped by category
+repo_url: https://github.com/gio-del/ODC-Challenges-CTF
+edit_uri: https://github.com/gio-del/ODC-Challenges-CTF/edit/main/
+docs_dir: ../
+theme: windmill-dark
+nav:
+  - Home: README.md
+  - Shellcode Crafting:
+     - shellcode/README.md
+     - 'backtoshell': shellcode/backtoshell/README.md
+     - 'onlyreadwrite': shellcode/onlyreadwrite/README.md
+     - 'gimme3bytes': shellcode/gimme3bytes/README.md
+     - 'tiny': shellcode/tiny/README.md
+     - 'multistage': shellcode/multistage/README.md
+     - 'lost_in_memory': shellcode/lost_in_memory/README.md
+     - 'server': shellcode/server/README.md
+     - 'benchmarking_service': shellcode/benchmarking/README.md
+  - Reverse Engineering:
+    - reversing/README.md
+    - 'revmem': reversing/revmem/README.md
+    - 'revmemp': reversing/revmemp/README.md
+    - 'crackme': reversing/crackme/README.md
+    - 'keycheck_baby': reversing/keycheck_baby/README.md
+    - 'leaked_license': reversing/leaked_license/README.md
+  - Binary Mitigations:
+    - mitigations/README.md
+    - 'leakers': mitigations/leakers/README.md
+    - 'gonna_leak': mitigations/gonna_leak/README.md
+    - 'aslr': mitigations/aslr/README.md
+    - 'ptr_protection': mitigations/ptr_protection/README.md
+  - ROP:
+    - rop/README.md
+    - 'easyrop': rop/easyrop/README.md
+    - 'emptyspaces': rop/emptyspaces/README.md
+    - 'ropasaurusrex': rop/ropasaurusrex/README.md
+    - 'byteflip': rop/byteflip/README.md
+    - 'positiveleak': rop/positiveleak/README.md
+  - Heap Exploitation:
+    - heap/README.md
+    - 'fastbin_attack': heap/fastbin_attack/README.md
+    - 'pkm': heap/pkm/README.md
+    - 'playground': heap/playground/README.md
+  - Symbolic Execution:
+    - symbolic/README.md
+    - 'cracksymb': symbolic/cracksymb/README.md
+    - 'pnrg': symbolic/pnrg/README.md
+    - 'prodkey': symbolic/prodkey/README.md
+  - Race Conditions:
+    - race/README.md
+    - 'aart': race/aart/README.md
+    - 'metarace': race/metarace/README.md
+    - 'pybook': race/pybook/README.md
+  - Serialization (Object Injection):
+    - serialization/README.md
+    - 'free-as-in-beer': serialization/free-as-in-beer/README.md
+    - 'metactf': serialization/metactf/README.md
+    - 'lolshop': serialization/lolshop/README.md
+    - '1024': serialization/1024/README.md
+  - XSS and CSP bypass:
+    - xss/README.md
+    - 'csp': xss/csp/README.md
+    - 'strict-csp': xss/strict-csp/README.md
+plugins:
+  - search:
+      indexing: 'full'
+      lang: 'en'
+extra_css:
+  - ./ODC/css/custom-styles.css

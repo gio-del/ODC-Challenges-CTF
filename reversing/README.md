@@ -7,5 +7,5 @@ Challenges (in rough order of subjective difficulty):
 - [revmem](./revmem/)
 - [revmemp](./revmemp/)
 - [crackme](./crackme/)
-- [key_checkbaby](./key_checkbaby/)
+- [keycheck_baby](./keycheck_baby/)
 - [leaked_license](./leaked_license/)
