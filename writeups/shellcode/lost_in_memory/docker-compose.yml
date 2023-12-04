@@ -1,0 +1,11 @@
+version: "3"
+services:
+  lost_in_memory:
+    build: .
+    container_name: chall1-lost_in_memory # Change this 
+    restart: always
+    volumes:
+     - ./chall:/chall:ro
+    command: socat tcp-listen:4001,fork,reuseaddr exec:"/chall/lost_in_memory" # Change file_name
+    network_mode: host
+

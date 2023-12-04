@@ -1,0 +1,4 @@
+With Ghidra a little decompilation and creating struct to better understand the code.
+Then the vulnerabilities are:
+	1) We can double free, in fact into the free function there is no check on the freed field
+	2) We can read after free, useful to leak stuff

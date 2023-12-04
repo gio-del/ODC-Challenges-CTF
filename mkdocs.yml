@@ -2,7 +2,7 @@ site_name: Cyberchallenge Writeups
 site_description: Writeups for various challenges grouped by category
 repo_url: https://github.com/gio-del/ODC-Challenges-CTF
 edit_uri: https://github.com/gio-del/ODC-Challenges-CTF/edit/main/
-docs_dir: ../
+docs_dir: writeups
 theme: windmill-dark
 nav:
   - Home: README.md
@@ -66,4 +66,4 @@ plugins:
       indexing: 'full'
       lang: 'en'
 extra_css:
-  - ./ODC/css/custom-styles.css
+  - .//css/custom-styles.css

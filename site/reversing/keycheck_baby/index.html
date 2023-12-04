@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>keycheck_baby - Cyberchallenge Writeups</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <link href="../../css/custom-styles.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "keycheck_baby", url: "#_top", children: [
+              {title: "Disassembly and decompilation", url: "#disassembly-and-decompilation" },
+              {title: "Solution", url: "#solution" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../leaked_license/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../leaked_license/" class="btn btn-xs btn-link">
+        leaked_license
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../crackme/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../crackme/" class="btn btn-xs btn-link">
+        crackme
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="keycheck_baby">keycheck_baby</h1>
+<h2 id="disassembly-and-decompilation">Disassembly and decompilation</h2>
+<p>This is the simplified version of the function that is checking the flag:</p>
+<pre><code class="language-c">void check(char[32] flag) {
+    unsigned char magic0[] = { ... };
+    unsigned char magic1[] = { ... };
+
+    if(flag[0...4] != &quot;flag{&quot;) {
+        return 0;
+    }
+
+    if(flag[30] != '}') {
+        return 0;
+    }
+
+    for(int i = 0; i &lt; 0xd; i++) {
+        if(&quot;babuzz&quot;[i%6] ^ flag[i+5] != magic0[i]) {
+            return 0;
+        }
+    }
+
+    char acc = -0x45;
+    for(i = 0; i &lt; 0xc; i++) {
+        acc = acc + str[i];
+        if(acc!= magic1[i]) return -1;
+    }
+
+    return 1;
+}
+</code></pre>
+<h2 id="solution">Solution</h2>
+<p>We have three(+1) checks to pass:</p>
+<p>1) The flag must start with <code>flag{</code>
+2) The flag must end with <code>}</code>
+3) The flag must satisfy the equation <code>babuzz[i%6] ^ flag[i+5] == magic0[i]</code> for <code>i</code> from <code>0</code> to <code>0xd</code>, then we have that <code>flag[i+5] == babuzz[i%6] ^ magic0[i]</code> for <code>i</code> from <code>0</code> to <code>0xd</code>.</p>
+<p>The last check is a bit trickier since there is accumulation involved.
+The idea is the following:</p>
+<ul>
+<li>Find the first: flag[0] = magic1[0] - (-0x45);</li>
+<li>Update j: j = j + flag[0];</li>
+<li>Find the second: flag[1] = magic1[1] - j;</li>
+<li>...</li>
+</ul>
+<p>This last step can be translated in the following cracking snippet:</p>
+<pre><code class="language-c">char j = -0x45;
+for(int i = 0xd; i &lt; 0xc + 0xd; i++) {
+    flag[i+5] = magic1[i-0xd] - j;
+    j = j + flag[i+5];
+}
+</code></pre>
+<p>The complete cracking program is in <a href="flag_cracker.c">flag_cracker.c</a>.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../leaked_license/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../leaked_license/" class="btn btn-xs btn-link">
+        leaked_license
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../crackme/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../crackme/" class="btn btn-xs btn-link">
+        crackme
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content">
+      <p>
+        <a href="https://github.com/gio-del/ODC-Challenges-CTF/edit/main/reversing/keycheck_baby/README.md"><i class="fa fa-github"></i>
+Edit on GitHub</a>
+      </p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gio-del/ODC-Challenges-CTF">Windmill Dark</a> theme by None (noraj).</p>
+</footer>
+
+</body>
+</html>

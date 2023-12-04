@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>crackme - Cyberchallenge Writeups</title>
+    <link href="../../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/highlight.css">
+    <link href="../../css/custom-styles.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '../..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "crackme", url: "#_top", children: [
+              {title: "Disassembling and reversing with Ghidra", url: "#disassembling-and-reversing-with-ghidra" },
+          ]},
+        ];
+
+    </script>
+    <script src="../../js/base.js"></script>
+      <script src="../../search/main.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../keycheck_baby/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../keycheck_baby/" class="btn btn-xs btn-link">
+        keycheck_baby
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../revmemp/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../revmemp/" class="btn btn-xs btn-link">
+        revmemp
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <h1 id="crackme">crackme</h1>
+<p>This challenge is a simple crackme that asks for a flag and checks if it is correct.</p>
+<h2 id="disassembling-and-reversing-with-ghidra">Disassembling and reversing with Ghidra</h2>
+<pre><code class="language-c">int main(int argc,char **argv) {
+  code *pcVar1;
+  int iVar2;
+
+  signal(5,catch_function);
+  if (argc &lt; 2) {
+    puts(&quot;USAGE: ./crackme FLAG!&quot;);
+    return 1;
+  }
+  input = argv[1];
+  pcVar1 = (code *)swi(3);
+  iVar2 = (*pcVar1)();
+  return iVar2;
+}
+</code></pre>
+<p>The swi(3) is doing an int3 to trigger a SIGTRAP signal. This is used to prevent the program from being debugged. We can patch this out with a hex editor or gdb. Or we can just reverse engineer the catch_function and see what it does. This is what the <code>flag_cracker.c</code> program does. In fact, it is a very simple function: the input is xored with a key and the result is compared with another array of bytes. So we need just to xor the key array with the result bytes array to get the flag.</p>
+<p>The complete cracking program is in <a href="flag_cracker.c">flag_cracker.c</a>.</p>
+
+  <br>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../keycheck_baby/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../keycheck_baby/" class="btn btn-xs btn-link">
+        keycheck_baby
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../revmemp/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../revmemp/" class="btn btn-xs btn-link">
+        revmemp
+      </a>
+    </div>
+    
+  </div>
+
+    <br>
+</div>
+
+<footer class="col-md-12 wm-page-content">
+      <p>
+        <a href="https://github.com/gio-del/ODC-Challenges-CTF/edit/main/reversing/crackme/README.md"><i class="fa fa-github"></i>
+Edit on GitHub</a>
+      </p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gio-del/ODC-Challenges-CTF">Windmill Dark</a> theme by None (noraj).</p>
+</footer>
+
+</body>
+</html>
