@@ -51,6 +51,7 @@ nav:
     - 'aart': race/aart/README.md
     - 'metarace': race/metarace/README.md
     - 'pybook': race/pybook/README.md
+    - 'discount': race/discount/README.md
   - Serialization (Object Injection):
     - serialization/README.md
     - 'free-as-in-beer': serialization/free-as-in-beer/README.md
@@ -61,7 +62,8 @@ nav:
     - xss/README.md
     - 'csp': xss/csp/README.md
     - 'strict-csp': xss/strict-csp/README.md
+    - 'look_my_fond': xss/look_my_font/README.md
 plugins:
   - search
 extra_css:
-  - .//css/custom-styles.css
+  - ../css/custom-styles.css
