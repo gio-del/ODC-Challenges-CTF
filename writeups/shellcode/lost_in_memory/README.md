@@ -1,6 +1,6 @@
 # Lost In Memory
 
-```asm
+```c
 lea rax, [rip]
 sub rax, 0x6e
 mov rdi, 1

@@ -1,0 +1,27 @@
+# Create a github worflow to build the mkdocs site in a branch called gh-pages and then deploy it to github pages at every push to main
+
+name: Build and Deploy
+
+# Use mkdocs gh-deploy to deploy to github pages !!!
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mkdocs mkdocs-windmill-dark
+      - name: Build and Deploy
+        run: |
+          mkdocs gh-deploy --force

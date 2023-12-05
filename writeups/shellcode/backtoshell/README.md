@@ -2,7 +2,7 @@
 
 Very simple challenge. It basically reads the shellcode from stdin and executes it. We only need to pass the correct shellcode.
 
-```asm
+```c
 mov rdi, rax
 add rdi, 16
 mov rax, 0x3b
