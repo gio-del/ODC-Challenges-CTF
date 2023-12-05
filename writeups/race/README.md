@@ -7,3 +7,4 @@ Challenges (in rough order of subjective difficulty):
 - [aart](./aart/)
 - [metarace](./metarace/)
 - [pybook](./pybook/)
+- [discount](./discount/)

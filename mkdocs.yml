@@ -52,7 +52,7 @@ nav:
     - 'metarace': race/metarace/README.md
     - 'pybook': race/pybook/README.md
     - 'discount': race/discount/README.md
-  - Serialization (Object Injection):
+  - Serialization:
     - serialization/README.md
     - 'free-as-in-beer': serialization/free-as-in-beer/README.md
     - 'metactf': serialization/metactf/README.md
@@ -63,7 +63,11 @@ nav:
     - 'csp': xss/csp/README.md
     - 'strict-csp': xss/strict-csp/README.md
     - 'look_my_font': xss/look_my_font/README.md
+
 plugins:
   - search
+  - gen-files:
+      scripts:
+        - writeups/assets/mkdocs_scripts/gen_files.py
 extra_css:
-  - ../css/custom-styles.css
+  - ../assets/mkdocs_style/custom-styles.css

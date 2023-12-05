@@ -2,7 +2,7 @@
 
 ## Disassemble and Decompilation
 
-![Empty Spaces Main](../../.github/assets/emptyspaces/main.png)
+![Empty Spaces Main](../../assets/emptyspaces/main.png)
 
 As we can see the input string is 64 bytes long and the read is reading 137, thus we have a BO. The problem is that after the overflow of the buffer and the sEBP we have just 137-64-8=65 bytes that are not enough for a rop chain where we first read the string '/bin/sh' and then call execve.
 

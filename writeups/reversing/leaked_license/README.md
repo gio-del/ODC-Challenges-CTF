@@ -6,7 +6,7 @@ Objective: find the serial code associated to another license, `726cfc2d26c6defe
 
 The license generated is of course always the same, so we have just the serial code associated to that license, not the one we need.
 
-![Serial Code Generation](../../.github/assets/leaked_license/serialcode_generation.png)
+![Serial Code Generation](../../assets/leaked_license/serialcode_generation.png)
 
 The code it's a mess and renaming the variables doesn't help much.
 

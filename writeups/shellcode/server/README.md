@@ -58,7 +58,7 @@ get_name() is reading 4096 bytes in a buffer of 1008 bytes, so we have a buffer 
 
 One can also use the syscall `dup2` to redirect the socket file descriptor to stdout, and then use the shellcode from the previous challenges.
 
-```x86asm
+```c
 xor rax, rax
 mov rax, 0x21 /* dup2 */
 mov rsi, 0x0
