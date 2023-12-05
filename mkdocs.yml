@@ -62,7 +62,7 @@ nav:
     - xss/README.md
     - 'csp': xss/csp/README.md
     - 'strict-csp': xss/strict-csp/README.md
-    - 'look_my_fond': xss/look_my_font/README.md
+    - 'look_my_font': xss/look_my_font/README.md
 plugins:
   - search
 extra_css:
