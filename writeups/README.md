@@ -4,6 +4,16 @@ This repository contains the solution for various challenges taken during the Of
 
 Challenges are divided into categories, each one of them has its own folder. Each challenge contains a `README.md` file with the description of the challenge and the writeup.
 
-## Challenges
+## Categories
 
-[Available Here](./writeups/) and [here](https://gio-del.github.io/ODC-Challenges-CTF)
+- [Shellcode](./shellcode/)
+- [Reverse Engineering](./reversing/)
+- [Mitigation Bypass](./mitigations/)
+- [ROP](./rop/)
+- [Heap Exploitation](./heap/)
+- [Symbolic Exeuction and Fuzzing](./symbolic/)
+- [Race Condition](./race/)
+- [Serialization](./serialization/)
+- [XSS](./xss/)
+
+## Final CTF
