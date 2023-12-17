@@ -1,0 +1,84 @@
+In order to use gdb we need to patch the binary (nop instead of the call to ptrace() otherwise no debug is possible)
+
+We have three stages (three code stub sent through the network)
+
+- data, called with a heap chunk of size 0x300
+- prepareinput called with the input flag
+- check, called again with the heap chunk of data
+
+# DATA: 116 bytes long code
+
+0x00:	mov    rdi,QWORD PTR [rdi]
+0x03:	jmp    0x27
+0x05:	pop    rsi
+0x06:	mov    r12,0x9
+0x0d:	cmp    r12,0x0
+0x11:	je     0x26
+0x13:	mov    r13,QWORD PTR [rsi]
+0x16:	mov    QWORD PTR [rdi],r13
+0x19:	add    rsi,0x8
+0x1d:	add    rdi,0x8
+0x21:	dec    r12
+0x24:	jmp    0x0d
+0x26:	ret    
+0x27:	call   0x05
+0x2c:	int3   
+---- some other bad code ----
+
+
+The first part of data code
+
+1. After 0x00 in RDI there will be the heap chunk address (input of code function)
+2. Jump to 0x27
+3. Call 0x05
+4. Pop RSI will put 0x27 (int3 address) into RSI
+5. Then basically a cycle will move 72 byte from 0x27 on into the heap
+
+tl;dr; data is a piece of code to put 72 byte into the heap, this code will be used as a key to xor the flag
+
+# PREPAREINPUT: 56 byte long code, input is the flag ( [rdi] has the address of the flag, [rdi+0x8] has the address of the heap chunk with data )
+
+0x00:	mov    rsi,QWORD PTR [rdi+0x8]   <--- put the heap chunk address into rsi
+0x04:	mov    rdi,QWORD PTR [rdi]		 <--- put the flag address into rdi
+0x07:	mov    rdx,rsi					 <--- copy the heap chunk address into rdx
+0x0a:	add    rdx,0x100				 <--- rdx = heap chunk address + 0x100
+0x11:	mov    rsi,QWORD PTR [rsi]		 <--- put 8 byte from the chunk address into rsi
+0x14:	mov    r12,0x8					 <--- i = 0x8
+0x1b:	cmp    r12,0x0  				 <--- if i==0 return
+0x1f:	je     0x37
+0x21:	mov    rcx,QWORD PTR [rdi]       <--- put 8 byte from the flag into rcx
+0x24:	xor    rcx,rsi                   <--- xor the flag with rsi, that contains the data from the previous point
+0x27:	mov    QWORD PTR [rdx],rcx       <--- put the result of the xor into rdx (in the heap at the address chunk +0x100)
+0x2a:	add    rdx,0x8
+0x2e:	add    rdi,0x8
+0x32:	dec    r12
+0x35:	jmp    0x1b
+0x37:	ret    
+
+Prepare input code xor the input flag with the first 8 bytes of data from the code part and put it into the heap at an address of 0x100 offset w.r.t. the chunk of size 0x300
+
+Note: The first 8 bytes of data are xored with the 64 bytes long flag
+
+# CHECK: 70 byte long code
+
+0x00:	mov    rdi,QWORD PTR [rdi] 		 <--- put the heap chunk address into rdi
+0x03:	mov    rsi,rdi					 <--- copy the heap chunk address into rsi
+0x06:	add    rsi,0x100                 <--- heap address + 0x100 stores the result of the xor of the flag with the key
+0x0d:	add    rdi,0x8                   <--- rdi = rdi + 8
+0x11:	mov    rcx,0x9                   <--- i = 9
+0x18:	cmp    rcx,0x0
+0x1c:	je     0x3e                      <--- if (i == 0) return
+0x1e:	mov    r10,QWORD PTR [rdi]       
+0x21:	mov    r11,QWORD PTR [rsi]
+0x24:	add    rdi,0x8
+0x28:	add    rsi,0x8
+0x2c:	cmp    r10,r11                   <--- if (data+8 != data xor flag)
+0x2f:	jne    0x36
+0x31:	dec    rcx
+0x34:	jmp    0x18
+0x36:	mov    rax,0x0
+0x3d:	ret    
+0x3e:	mov    rax,0x1
+0x45:	ret    
+
+This checks wether the flag is correct or not, basically compares whatever is at data+8 with data+100 (result of xor of previous point), bytes by bytes
