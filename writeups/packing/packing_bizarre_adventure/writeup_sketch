@@ -1,0 +1,61 @@
+Looking up in ghidra one can see that there is a decode(288) function call and the decode function it's kinda messy. Probabily some .text code is being decoded at runtime.
+
+Im quite sure the payload is being decrypted at runtime since in the main the .text is made writable
+
+In the .bss there are two interesting entries: key and payload1
+
+The idea is to get the code first and then reverse it.
+
+It is an incremental packer I think, because when it fails we can see a series of nop at the end of the decode and then a puts of the fail string, so no reference to the win string
+
+# First Part
+
+At a certain point the payload of the checking function is decrypted
+
+0x36f <+438>:	movabs rax,0x988a215bec73afb4											
+0x379 <+448>:	movabs rdx,0xef48e5cb65f245cf
+0x383 <+458>:	mov    QWORD PTR [rbp-0x40],rax											<--- a = 0x988a215bec73afb4          ab_arr = {0xb4, 0xaf, 0x73, ..., 0xcf, 0x45, ..., 0xef}
+0x387 <+462>:	mov    QWORD PTR [rbp-0x38],rdx											<--- b = 0xef48e5cb65f245cf
+0x38b <+466>:	mov    BYTE PTR [rbp-0x30],0x0         									<--- c = 0
+0x38f <+470>:	movabs rax,0xedba58208b12c3d2                         
+0x399 <+480>:	movabs rdx,0x9c1791b3569c1abd
+0x3a3 <+490>:	mov    QWORD PTR [rbp-0x20],rax                                         <--- d = 0xedba58208b12c3d2          de_arr = {0xde, 0xc3, ..., 0xbd, 0x1a, ..., 0x9c}
+0x3a7 <+494>:	mov    QWORD PTR [rbp-0x18],rdx        									<--- e = 0x9c1791b3569c1abd
+0x3ab <+498>:	mov    BYTE PTR [rbp-0x10],0x0                                          <--- f = 0
+0x3af <+502>:	lea    rax,[rip+0x2e6a]        # 0x555555558220 <flag>                  <--- rax points to the input flag now
+0x3b6 <+509>:	mov    QWORD PTR [rbp-0x48],rax                                         <--- buf* = flag_addr
+0x3ba <+513>:	mov    DWORD PTR [rbp-0x64],0x1                                         <--- int check = 1
+0x3c1 <+520>:	mov    DWORD PTR [rbp-0x60],0x0                                         <--- int counter = 0
+0x3c8 <+527>:	jmp    0x555555555408 <decode+591>                                      <--- check the counter if out of bound
+0x3ca <+529>:	mov    eax,DWORD PTR [rbp-0x60]                                         <--- eax = counter
+0x3cd <+532>:	movsxd rdx,eax                                                          <--- edx = eax (sign-extension ??)
+0x3d0 <+535>:	mov    rax,QWORD PTR [rbp-0x48]                                         <--- rax = flag*
+0x3d4 <+539>:	add    rax,rdx                                                          <--- rax = rax + rdx (pointer to counter-th char of the flag)
+0x3d7 <+542>:	movzx  eax,BYTE PTR [rax]                                               <--- eax = character of flag of index "counter"
+0x3da <+545>:	movsx  edx,al                                                           <--- edx = eax = character of flag of index "counter"
+0x3dd <+548>:	mov    eax,DWORD PTR [rbp-0x60]                                         <--- eax = counter
+0x3e0 <+551>:	cdqe                                                                    <--- sign extend eax into rax
+0x3e2 <+553>:	movzx  eax,BYTE PTR [rbp+rax*1-0x40]                                    <--- eax = byte from ab_arr at index counter
+0x3e7 <+558>:	movzx  eax,al                                                             
+0x3ea <+561>:	xor    edx,eax                                                          <--- edx = xor input flag with ab_arr element
+0x3ec <+563>:	mov    eax,DWORD PTR [rbp-0x60]                                         <--- eax = counter
+0x3ef <+566>:	cdqe   
+0x3f1 <+568>:	movzx  eax,BYTE PTR [rbp+rax*1-0x20]                                    <--- eax = byte from de_arr at index counter
+0x3f6 <+573>:	movzx  eax,al
+0x3f9 <+576>:	cmp    edx,eax                                                          <--- cmp the xor with the element of the de_arr
+0x3fb <+578>:	sete   al                                                               <--- al = result of cmp
+0x3fe <+581>:	movzx  eax,al
+0x401 <+584>:	and    DWORD PTR [rbp-0x64],eax                                         <--- check = check and eax
+0x404 <+587>:	add    DWORD PTR [rbp-0x60],0x1                                         <--- counter++
+0x408 <+591>:	cmp    DWORD PTR [rbp-0x60],0xf                                         <--- if (counter > 0xf) exit from loop
+0x40c <+595>:	jle    0x5555555553ca <decode+529>
+0x40e <+597>:	cmp    DWORD PTR [rbp-0x64],0x0                                         <--- here counter = 0xf + 1 = 0x10
+0x412 <+601>:	je     0x555555555469 <decode+688>                                      <--- if (check == 0) goto fail
+
+We can get the flag xoring ab_arr and de_arr, doing so I discovered that this is just one step of the encryption, in particular we get the first 16 bytes of the flag.
+
+If these bytes match the program returns to the decryption part for a second step :)
+
+# Second Part
+
+After the decryption routine, the last 16 bytes are basically found in the same way of the previous step
