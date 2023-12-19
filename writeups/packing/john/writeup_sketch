@@ -1,0 +1,34 @@
+Disasssembling with Ghidra (and decompiling) we can see that the main calls an unpacking routine that unpacks a function, executes it and then repack the function
+
+There are 5 different keys depending on the address of the function to pack/unpack
+
+Actually for each function being called, the function it's first unpacked, then executed and finally repacked. So this is a Shift Frames Packer (type VI)
+
+# First Step
+
+Get the unpacked code, we have two approaches:
+
+- Run it in gdb and dump the unpacked memory (dynamic analysis)
+	> Using `dump binary memory <name_dump> <start> <end>
+
+- Build an unpacker that uses the routing to unpack the code (static analysis)
+
+# Second Step: Reverse engineer the unpacked binary
+
+There are seven checks.
+
+The first and the second one assures that the flag starts with "flag{" and ends with "}" respectively.
+
+The third check assures that all the characters are ASCII characters
+
+The fourth check is checking six characters of the flag after the beginning "flag{", with GDB I found that these characters are "packer"
+
+The fifth check is a mess, I'll bruteforce it
+
+The sixt check is checking the last 10 characters of the flag: with z3 I found that these characters are "annoying_"
+
+The last checks assures that strlen(flag) is 0x21 (33)
+
+# The Last Ride
+
+Partial Flag: flag{packer{SOMETHING}annoying_}
