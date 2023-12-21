@@ -23,12 +23,10 @@ The third check assures that all the characters are ASCII characters
 
 The fourth check is checking six characters of the flag after the beginning "flag{", with GDB I found that these characters are "packer"
 
-The fifth check is a mess, I'll bruteforce it
+The fifth check is reverse engineered
 
 The sixt check is checking the last 10 characters of the flag: with z3 I found that these characters are "annoying_"
 
 The last checks assures that strlen(flag) is 0x21 (33)
 
-# The Last Ride
-
-Partial Flag: flag{packer{SOMETHING}annoying_}
+Putting all together I finally got the flag :)
