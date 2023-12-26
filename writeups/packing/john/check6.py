@@ -1,7 +1,7 @@
 from z3 import *
 from pwn import *
 
-data = [ 0x0f, 0x00, 0x01, 0x16, 0x10, 0x07, 0x09, 0x38, 0x00, 0x00 ]
+data = [ 0x0b, 0x4c, 0x0f, 0x00, 0x01, 0x16, 0x10, 0x07, 0x09, 0x38, 0x00, 0x00 ]
 
 # undefined4 check6(char *str,int n)
 
@@ -26,6 +26,8 @@ data = [ 0x0f, 0x00, 0x01, 0x16, 0x10, 0x07, 0x09, 0x38, 0x00, 0x00 ]
 #   return uVar1;
 # }
 
+dead_book = []
+
 def check(key, i):
     ret = BitVecVal(0, 64)
     length = BitVecVal(len(key), 64)
@@ -42,17 +44,19 @@ def check(key, i):
     return ret
 
 
-strlen = 10
+strlen = 12
 
 s = Solver()
 
-key = [BitVec("key%d" % i, 64) for i in range(strlen)]
+key = [BitVec("key%d" % i, 8) for i in range(strlen)]
 
 # Constratints on the string
 for i in key:
 	s.add(i >= 0x20, i <= 0x7E) # Only Printable Characters
 
-s.add(check(key, 0) == 1) # annoying__
+s.add(key[0] == ord('&')) # From Check 5
+s.add(key[1] == ord('-')) # From Check 5
+s.add(check(key, 0) == 1)
 
 while(s.check() == sat):
     m = s.model()
