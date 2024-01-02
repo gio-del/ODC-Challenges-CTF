@@ -50,7 +50,3 @@ while not exit:
 	except:
 		p.close()
 		continue
-
-	if(exit == True): break
-
-p.interactive()
