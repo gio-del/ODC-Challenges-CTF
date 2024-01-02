@@ -31,7 +31,7 @@ The first part of data code
 1. After 0x00 in RDI there will be the heap chunk address (input of code function)
 2. Jump to 0x27
 3. Call 0x05
-4. Pop RSI will put 0x27 (int3 address) into RSI
+4. Pop RSI will put 0x2c (int3 address) into RSI
 5. Then basically a cycle will move 72 byte from 0x27 on into the heap
 
 tl;dr; data is a piece of code to put 72 byte into the heap, this code will be used as a key to xor the flag
