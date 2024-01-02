@@ -11,7 +11,7 @@ pop rdx
 syscall
 ```
 
-- RAX: already set to 0x0a (syscall number for `read`)
+- RAX: already set to 0x0 (syscall number for `read`)
 - RDI: already set to 0x0 (stdin)
 - RSI: already set to the buffer address
 - RDX: set using `pop rdx`. Why so? Because at that point the stack contains a large number that can be used as a buffer size. But not so large that the read will not execute correctly (see man page for `read`, in particular the NOTES section).
