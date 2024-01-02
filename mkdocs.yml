@@ -63,7 +63,11 @@ nav:
     - 'csp': xss/csp/README.md
     - 'strict-csp': xss/strict-csp/README.md
     - 'look_my_font': xss/look_my_font/README.md
-
+  - Packing and Obfuscation:
+    - packing/README.md
+    - 'dynamism': packing/dynamism/README.md
+    - 'john': packing/john/README.md
+    - 'packing_bizarre_adventure': packing/packing_bizarre_adventure/README.md
 plugins:
   - search
   - gen-files:
