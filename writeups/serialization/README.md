@@ -4,7 +4,7 @@ This set of challenges is about PHP Object Injection. The goal is to craft a PHP
 
 Challenges (in rough order of subjective difficulty):
 
-- [free-as-in-beer](./free-as-in-beer/)
 - [metactf](./metactf/)
+- [free-as-in-beer](./free-as-in-beer/)
 - [lolshop](./lolshop/)
 - [1024](./1024/)
