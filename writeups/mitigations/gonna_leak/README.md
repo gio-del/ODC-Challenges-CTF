@@ -4,15 +4,15 @@
 
 - checksec output:
 
-    ```c
-        Arch:     amd64-64-little
-        RELRO:    Partial RELRO
-        Stack:    Canary found
-        NX:       NX unknown - GNU_STACK missing
-        PIE:      No PIE (0x400000)
-        Stack:    Executable
-        RWX:      Has RWX segments
-    ```
+```c
+    Arch:     amd64-64-little
+    RELRO:    Partial RELRO
+    Stack:    Canary found
+    NX:       NX unknown - GNU_STACK missing
+    PIE:      No PIE (0x400000)
+    Stack:    Executable
+    RWX:      Has RWX segments
+```
 
 The binary reads a string from stdin into a stack buffer, then it loops reading in a stack buffer and printing it out.
 
