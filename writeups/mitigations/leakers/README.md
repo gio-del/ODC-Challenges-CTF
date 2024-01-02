@@ -20,6 +20,6 @@ The stack buffer is 100 bytes long, but 200 bytes are read in. Oh no, another bu
 
 Since there is a canary, we can first leak it by overflowing by a single byte and then reading the stack buffer.
 
-Then, we can overflow the buffer writing the correct canary and the address of the global buffer in which we put our shellcode (this is possible because the .bss section is RWX).
+Then, we can overflow the buffer writing the correct canary and the address of the global buffer in which we put our shellcode (this is possible because the .bss section is RWX and the binary is not PIE).
 
 The complete exploit is in [script.py](script.py).
