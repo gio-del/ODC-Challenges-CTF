@@ -15,5 +15,6 @@ Challenges are divided into categories, each one of them has its own folder. Eac
 - [Race Condition](./race/)
 - [Serialization](./serialization/)
 - [XSS](./xss/)
+- [Packing](./packing/)
 
 ## Final CTF

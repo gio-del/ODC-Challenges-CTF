@@ -4,13 +4,13 @@
 
 - checksec output:
 
-    ```c
-        Arch:     amd64-64-little
-        RELRO:    Partial RELRO
-        Stack:    Canary found
-        NX:       NX enabled
-        PIE:      PIE enabled
-    ```
+```c
+    Arch:     amd64-64-little
+    RELRO:    Partial RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      PIE enabled
+```
 
 Basically the binary lets us write integers in whatever index we want in an array, but the index is not checked, so we have arbitrary write in the stack.
 

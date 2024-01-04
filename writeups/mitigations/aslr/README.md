@@ -4,13 +4,13 @@
 
 - checksec output:
 
-    ```c
-        Arch:     amd64-64-little
-        RELRO:    Partial RELRO
-        Stack:    Canary found
-        NX:       NX enabled
-        PIE:      PIE enabled
-    ```
+```c
+    Arch:     amd64-64-little
+    RELRO:    Partial RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      PIE enabled
+```
 
 Similar to [leakers](../leakers/README.md), but this time the binary is PIE and NX is enabled.
 The binary reads a string from stdin into a global buffer, then it loops reading in a stack buffer and printing it out.
