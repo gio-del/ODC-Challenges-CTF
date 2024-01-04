@@ -59,3 +59,7 @@ If these bytes match the program returns to the decryption part for a second ste
 # Second Part
 
 After the decryption routine, the last 16 bytes are basically found in the same way of the previous step
+
+## Alternative Solution
+
+Dump the two steps and statically analyze them
