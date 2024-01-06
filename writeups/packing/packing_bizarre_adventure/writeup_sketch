@@ -60,14 +60,10 @@ If these bytes match the program returns to the decryption part for a second ste
 
 After the decryption routine, the last 16 bytes are basically found in the same way of the previous step
 
-
-FATTO ANCHE CON BRUTEFORCE DA GDB
 ## Alternative Solution
 
 Dump the two steps and statically analyze them
 
+## Alternative Solution 2
 
-FATTO ANCHE CON BRUTEFORCE DA GDB
-## Alternative Solution
-
-Dump the two steps and statically analyze them
+Bruteforce the flag with gdb
