@@ -1,0 +1,17 @@
+    Arch:     amd64-64-little
+    RELRO:    Partial RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x3ff000)
+    FORTIFY:  Enabled
+
+
+We need a libc leak, then maybe a onegadget it's good enough
+
+
+To leak libc it's sufficient to write out an address from the got (easy since the binary it's not PIE)
+
+- Latitude must be <= 90
+- Longitude must be <= 180
+
+No checks on negative values

@@ -62,3 +62,12 @@ After the decryption routine, the last 16 bytes are basically found in the same 
 
 
 FATTO ANCHE CON BRUTEFORCE DA GDB
+## Alternative Solution
+
+Dump the two steps and statically analyze them
+
+
+FATTO ANCHE CON BRUTEFORCE DA GDB
+## Alternative Solution
+
+Dump the two steps and statically analyze them
