@@ -63,3 +63,7 @@ After the decryption routine, the last 16 bytes are basically found in the same 
 ## Alternative Solution
 
 Dump the two steps and statically analyze them
+
+## Alternative Solution 2
+
+Bruteforce the flag with gdb
