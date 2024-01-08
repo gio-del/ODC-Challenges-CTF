@@ -1,0 +1,39 @@
+    Arch:     amd64-64-little
+    RELRO:    Full RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      PIE enabled
+
+One can:
+ - Login as user
+ - Registrate a user
+ - Login as Master (need the master password)
+ - Quit
+
+Once Logged In as User:
+ - Create Note
+ - Fill Note
+ - Print Note
+ - Delete Note
+ - Log Out
+ - Quit
+
+## User Registration and Login
+
+Pretty standard
+
+## Create Note
+
+Possible vuln: if note length is higher than 0x10001 the note is freed but NOT the inner owner name, memory leak
+
+## Fill Note
+
+Possible vuln: strings are not \0 terminated if the entire length is written -> memory leak
+
+## Print Note
+
+Possible vuln: it's possible to print not filled note
+
+## Delete Note
+
+Possible vuln: maybe an arbitrary free???
