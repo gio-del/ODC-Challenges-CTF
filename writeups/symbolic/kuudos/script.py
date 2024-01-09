@@ -12,7 +12,7 @@ key = [[Int("key_%d_%d" % (i,j)) for i in range(n)] for j in range(n)]
 # Only numbers in [1, 5]
 for i in range(n):
     for j in range(n):
-        s.add(key[i][j] >= 1, key[i][j] <= 5)
+        s.add(key[i][j] >= 1, key[i][j] <= n)
 
 # No reapeted on each column
 for j in range(n):
