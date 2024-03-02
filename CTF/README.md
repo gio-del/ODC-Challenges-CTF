@@ -5,7 +5,7 @@ This folder contains the writeups for the final Capture The Flag (CTF) event of 
 <!-- Table with links to the challenges and if i solved them or not -->
 | Challenge                            | Category            | Solved At CTF | Solved After CTF |
 | ------------------------------------ | ------------------- | ------------- | ---------------- |
-| [100%](./100%)                       | Symbolic            | ❌             | ✅                |
+| [100%](./100%25)                       | Symbolic            | ❌             | ✅                |
 | [chainflix](./chainflix)             | ROP                 | ❌             | ✅                |
 | [Crypto Puppy](./cryptopuppy)        | Serialization       | ✅             |                  |
 | [GitHub Explorer](./github_explorer) | XSS                 | ✅             |                  |
