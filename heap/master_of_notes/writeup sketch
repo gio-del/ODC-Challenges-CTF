@@ -1,0 +1,71 @@
+    Arch:     amd64-64-little
+    RELRO:    Full RELRO
+    Stack:    Canary found
+    NX:       NX enabled
+    PIE:      PIE enabled
+
+One can:
+ - 1) Registrate a user
+ - 2) Login as user
+ - 3) Login as Master (need the master password)
+ - 4) Quit
+
+Once Logged In as User:
+ - 1) Create Note
+ - 2) Fill Note
+ - 3) Print Note
+ - 4) Delete Note
+ - 5) Log Out
+ - 6) Quit
+
+The master can:
+- 1) Print Note
+- 2) Delete Note
+- 3) Log Out
+- 4) Quit
+
+## User Registration and Login
+
+Pretty standard
+
+## Create Note
+
+Possible vuln: if note length is higher than 0x10001 the note is freed but NOT the inner owner name, memory leak
+
+## Fill Note
+
+Possible vuln: strings are not \0 terminated if the entire length is written -> memory leak, used to leak libc
+
+## Print Note
+
+Possible vuln: it's possible to print not filled note
+
+## Delete Note
+
+Possible vuln: maybe an arbitrary free???
+
+
+### HERE
+
+
+Basically the master can do double free, we need a way to become the master and then we have done
+
+How to become the master? We must know the password, or reset it :)
+Delete Note can take a negative index since there is no check :)
+
+check = strcmp((notes_array[note_idx].note_ptr)->owner,current_user->name);
+
+If note_idx is -8: notes_array[-8] points to notes_counter, then notes_counter.note_ptr will take the 2nd 8bytes of the notes_counter as if it's a user. Those bytes are a pointer to the master in the heap. Then (notes_array[-8].note_ptr)->owner points to "Master Of Notes" so if our current_user has the same name we pass that check.
+
+What happens then? The frees happen. 
+
+  free((notes_array[-8].note_ptr)->note_str); // This frees the 2nd byte of the master (password)
+  free((notes_array[-8].note_ptr)->owner); // This frees the master name
+  free(notes_array[-8].note_ptr); // This frees the master itself
+  notes_array[-8].in_use = 0; // This set to zero the first bytes of notes_array[-8] that is the notes_counter
+  notes_counter = notes_counter - 1; // The notes_counter become -1, which is 0xffffffff, huge number
+
+
+The password became "\x00" because it's freed and so goes into a tcachebin pointing to NULL
+
+Now we can login as master, perform a double free, logout and login as user and now we can perform a tcache bin attack
