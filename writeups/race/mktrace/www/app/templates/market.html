@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Market{% endblock %}
+{% block content %}
+<h1> Create a new Order </h1>
+<form method="post" action="{{ url_for('new_order') }}">
+  <div class="mb-3">
+    <label for="euro" class="form-label">Euro €</label>
+    <input name="euro" type="number" class="form-control" id="euro" placeholder="€">
+  </div>
+  <div class="mb-3">
+    <label for="coins" class="form-label">Coins 🪙</label>
+    <input name="coins" type="number" class="form-control" id="coins" placeholder="🪙">
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="buy" id="buy" value="buy" checked>
+    <label class="form-check-label" for="buy">
+      Buy Coins
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="radio" name="buy" id="sell" value="sell">
+    <label class="form-check-label" for="sell">
+      Sell Coins
+    </label>
+  </div>
+  <div class="mb-3">
+    <button type="submit" class="btn btn-primary mb-3">Creater Order</button>
+  </div>
+</form>
+<h1>orders for {{ session['market'] }} [ {{ orders | length }} ]</h1>
+<table class="table table-striped table-dark">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">🪙</th>
+      <th scope="col">€</th>
+      <th scope="col">€/🪙</th>
+      <th scope="col">Date</th>
+      <th scope="col">by</th>
+      <th scope="col">###</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for o in orders %}
+    <tr>
+      <th scope="row">{{ o.id }}</th>
+      <td>{{ o.coins }}</td>
+      <td>{{ "{:,.2f}".format(o.euro/100) }}</td>
+      <td>{{ "{:,.4f}".format(o.euro/o.coins/100) }}</td>
+      <td>{{ o.date }}</td>
+      <td>{{ o.user.username }}</td>
+      <td>
+        <span id="operation">
+        {% if o.is_buy %} 
+         buy 
+        {% else %}
+         sell
+        {% endif%}
+        </span>
+        {% if o.user.username == session.username %}
+        <a id="cancel" href="./delete_order/{{ o.id }}"> ❌ </a>
+        {% endif %}
+      </td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

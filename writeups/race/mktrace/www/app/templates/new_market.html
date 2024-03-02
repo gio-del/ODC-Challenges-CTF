@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}New Market{% endblock %}
+{% block content %}
+<h1>Choose a Market</h1>
+<h2>Join a Market</h2>
+<form method="post" action="{{ url_for('join_market') }}">
+  <div class="mb-3">
+    <label for="name" class="form-label">Market Name</label>
+    <input name="name" type="text" class="form-control" id="name" placeholder="Market Name">
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">password</label>
+    <input name="password" type="password" class="form-control" id="password" placeholder="password">
+  </div>
+  <div class="mb-3">
+    <button type="submit" class="btn btn-primary mb-3">Join</button>
+  </div>
+</form>
+
+<h2>New Market</h2>
+  <p>Create new 🪙 market. Only people that now the password can join your market!</p>
+  <form method="post" action="{{ url_for('new_market') }}">
+  <div class="mb-3">
+    <label for="name" class="form-label">Market Name</label>
+    <input name="name" type="text" class="form-control" id="name" placeholder="Market Name">
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">password</label>
+    <input name="password" type="password" class="form-control" id="password" placeholder="password">
+  </div>
+  <div class="mb-3">
+    <button type="submit" class="btn btn-primary mb-3">Create</button>
+  </div>
+</form>
+{% endblock %}

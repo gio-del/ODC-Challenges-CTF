@@ -6,5 +6,6 @@ Challenges (in rough order of subjective difficulty):
 
 - [metactf](./metactf/)
 - [free-as-in-beer](./free-as-in-beer/)
+- [vpn](./vpn/)
 - [lolshop](./lolshop/)
 - [1024](./1024/)
