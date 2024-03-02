@@ -1,4 +1,4 @@
-# Puppy Walk
+# CryptoPuppy
 
 - flag is into "/flag.txt"
 - img.php does unserialize on the `puppy` parameter

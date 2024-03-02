@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block headers %}
+{% endblock %}
+
+
+{% block content %}
+
+        <div class="hero-unit jumbotron text-center" id="home-hero-unit">
+          <h1>Post Messages</h1>
+        </div>
+        <br/>
+
+        <div class="row">
+          <div class="col-md-12 col-xs-12 text-center">
+              <div>
+                <form name="senderform" id="senderform" action="{{ url_for('post') }}" method="POST">
+                    <div class="form-group row">
+                        <button type="submit" name="login" value="login" class="btn btn-primary">
+                        Send!
+                        </button>
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <input type="text" id="img" name="img" placeholder="Insert the img url here">
+                      </div>
+                      <div class="col-md-12">
+                             <textarea id="content" name="content" class="md-textarea form-control" rows="3" placeholder="Insert here your message"></textarea>
+                        </div>
+                    </div>
+
+
+                </form>
+
+              </div>
+          </div>
+        </div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

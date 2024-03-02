@@ -1,0 +1,235 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+
+.my-form
+{
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.my-form .row
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.login-form
+{
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.login-form .row
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+html,body{
+    height:100%;
+}
+
+body{
+    /*background: #258EAC;*/
+    padding-top: 60px;
+}
+
+.navbar-default{
+    border-bottom:1px solid #777;
+}
+
+.btn-xlarge {
+    padding: 18px 28px;
+    font-size: 22px;
+    line-height: normal;
+    -webkit-border-radius: 8px;
+       -moz-border-radius: 8px;
+            border-radius: 8px;
+}
+
+.no-padding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+
+body#maintenance{
+    padding-top: 0;
+}
+
+.bg-wrapper{
+    /*background-color: #258EAC;*/
+    min-height: 100%;
+    height: auto !important;
+    padding-bottom: 60px;
+}
+
+body > .bg-wrapper > .container{
+    padding: 15px;
+    padding-top:25px;
+}
+.table-nonfluid {
+    width: auto;
+}
+
+/*fix mozilla tables quirks*/
+@-moz-document url-prefix() {
+  fieldset { display: table-cell; }
+}
+
+.table-responsive{
+    overflow: auto;
+}
+
+.table-responsive-lg{
+  font-size: 16px;
+}
+
+.tablefield {
+  white-space: nowrap;
+  overflow: visible;
+}
+
+.fixed-height {
+    max-height: 340px;
+    overflow-y: scroll;
+    border: 1px solid #DDD;
+}
+
+.progress-label {
+    float: right;
+    margin-left: 1em;
+}
+
+.progress-small{
+    margin-bottom: 0px;
+}
+
+.recaptcha {
+    margin: 1em auto;
+    max-width: 304px;
+}
+
+
+#contact_map{
+    height: 350px;
+    margin: 10px;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.footer{
+    color: #777;
+    text-align: center;
+    margin-top: -60px;
+    padding: 10px 0;
+    border-top: solid 1px #ccc;
+    background-color:#222;
+    height: 60px;
+    width:100%;
+}
+
+ul.inline{
+    list-style: none;
+}
+
+ul.inline li{
+    display: inline;
+}
+
+ul.social-buttons{
+
+    list-style: none;
+    margin: 5px 0 20px 0;
+    padding: 0;
+    width: 100%;
+}
+
+ul.social-buttons li{
+    display: block;
+    float: left;
+}
+
+.monospaced{
+    font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+}
+
+.social-login{
+    margin-bottom: 20px;
+}
+
+.social-box{
+    border-bottom: solid 1px #ccc;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+
+.loginform{
+    background-color: #fff;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border: solid 1px #ccc;
+    -webkit-border-top-left-radius: 4px;
+    border-top-left-radius: 4px;
+    -moz-border-radius-topleft: 4px;
+    -webkit-border-top-right-radius: 4px;
+    border-top-right-radius: 4px;
+    -moz-border-radius-topright: 4px;
+}
+
+.ellipsis {
+  text-overflow: ellipsis;
+
+  /* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.searchbox .btn{
+    border-radius: 0px 0px 4px 0px !important;
+    background-color: #A1C536;
+}
+
+.searchbox *[type="text"] {
+    border-radius: 0px 0px 0px 4px;
+    min-width: 260px;
+    width: 100%;
+}
+
+.dropdown-menu.searchbox{
+    padding: 0px;
+}
+
+li.active span{
+    color: #A1C536;
+}
+
+li.active span.advanced{
+    color: #F21D2E;
+}
+
+.fa-m{
+    width: 2em;
+}
+
+.progress-small{
+    margin-bottom: 0px;
+}
+
+.tooltip-inner {
+    max-width: none;
+    white-space: nowrap;
+}
+
+.truncate {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardmsg {
+    margin-top: 4px;
+    border: 2px solid black;
+    border-radius: 25px;
+}

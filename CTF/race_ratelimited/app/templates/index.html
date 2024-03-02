@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block headers %}
+{% endblock %}
+
+
+{% block content %}
+
+        <div class="hero-unit jumbotron text-center" id="home-hero-unit">
+          <h1>TheLikeButton</h1>
+          <h3>Public post to collect tons of likes!</h3>
+        </div>
+        <br/>
+
+        <div class="row">
+          <div class="col-md-12 col-xs-12 text-center">
+            {% if current_user %}
+              Welcome to TheLikeButton {{ current_user.username }}.
+              {% for p in posts %}
+              <span class="border border-primary">
+              <div>
+                  <p><img class="rounded  border-secondary" style="width: 300px;" src="{{ p.img }}"></img></p>
+                  <p>{{ p.content }} by {{ p.sender.username }} ({{ p.likes|length }} likes) </a></p>
+                  <form name="senderform" id="senderform" action="{{ url_for('like') }}" method="POST">
+                    <input type="hidden" id="message_id" name="message_id" value="{{ p.id }}">
+                    <button type="submit" name="like" value="like" class="btn btn-success">Like</button>
+                  </form>
+                  <form name="senderform" id="senderform" action="{{ url_for('unlike') }}" method="POST">
+                    <button type="submit" name="unlike" value="unlike" class="btn btn-danger">Unlike</button>
+                    <input type="hidden" id="message_id" name="message_id" value="{{ p.id }}">
+                  </form>
+                </div>
+              </span>
+              <br>
+              <br>
+              {% endfor %}
+            {% else %}
+              <a href="{{ url_for('login') }}">
+                <button type="submit" class="btn btn-xlarge btn-primary">Enter TheLikeButton!</button>
+              </a>
+            {% endif %}
+          </div>
+        </div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
